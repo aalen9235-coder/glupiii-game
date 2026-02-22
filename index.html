@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Glupi Prasanja</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  font-family: 'Bangers', cursive;
+  overflow: hidden;
+  background: white;
+}
+
+#rotate-message {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  color: red;
+  text-align: center;
+  z-index: 50;
+  font-family: 'Bangers', cursive;
+}
+
+/* First instrukcii screen */
+#instrukcii-screen {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: url('https://i.imgur.com/P3K9EIG.jpeg');
+  background-size: 100% 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: none;
+  z-index: 40;
+}
+
+/* Second background screen */
+#instrukcii-2 {
+  position:absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:url('https://i.imgur.com/kdFqu4h.jpeg') center/100% 100% no-repeat;
+  display:none;
+  z-index:45;
+}
+
+/* Invisible buttons */
+#open-btn-2 {
+  position: absolute;
+  top: 0; right: 0;
+  width: 100px;
+  height: 100px;
+  background: transparent;
+  cursor: pointer;
+  z-index: 50;
+}
+
+#back-btn-2 {
+  position:absolute;
+  top:0; left:0;
+  width:100px; height:100px;
+  background: transparent;
+  cursor: pointer;
+  z-index:50;
+}
+
+#back-btn {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100px;
+  height: 100px;
+  background: transparent;
+  cursor: pointer;
+  z-index: 50;
+}
+
+#game {
+  width: 100%;
+  height: 100%;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-image: url('https://i.imgur.com/B18NNK5.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Buttons */
+#start-button, #new-button {
+  font-size: 30px;
+  padding: 15px 40px;
+  cursor: pointer;
+  border-radius: 0;
+  border: none;
+  color: white;
+  text-transform: uppercase;
+  z-index: 10;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px black;
+  font-family: 'Bangers', cursive;
+  position: absolute;
+  top: 40%;
+  background: transparent;
+}
+#start-button { left: 20%; }
+#new-button { right: 20%; }
+
+/* Hide elements by default */
+#question-counter, #question, #background, #score, #answers-grid, .overlay {
+  display: none;
+}
+
+button, .answer {
+  -webkit-tap-highlight-color: transparent; 
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Question counter */
+#question-counter {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 50px;
+  height: 50px;
+  background: red;        
+  border: 3px solid black;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  color: black;           
+  font-weight: bold;
+  z-index: 20;
+  font-family: 'Bangers', cursive;
+}
+
+/* Question text */
+#question {
+  font-size: 28px;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  color: #000;
+  z-index: 10;
+  font-family: 'Bangers', cursive;
+}
+
+/* Background div for answers */
+#background {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Score */
+#score {
+  font-size: 18px;
+  color: black;      
+  text-shadow: 2px 2px 4px black;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  z-index: 25;
+  font-family: 'Bangers', cursive;
+}
+
+/* Answers grid */
+#answers-grid {
+  width: 95%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+  justify-items: center;
+  align-items: center;
+  z-index: 5;
+  transform: translateY(35px);
+}
+
+/* Answer buttons */
+.answer {
+  width: 200px;
+  height: 60px;
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-image: url('https://i.imgur.com/B18NNK5.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 3px solid black;
+  color: white;
+  text-shadow: 2px 2px 4px black;
+  text-transform: uppercase;
+  transition: 0.2s;
+  font-family: 'Bangers', cursive;
+  user-select: none;
+}
+
+.answer,
+.answer:focus,
+.answer:active,
+.answer:hover,
+.answer.active {
+  background-color: transparent;
+  outline: none;
+  box-shadow: none;
+}
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 30;
+  font-family: 'Bangers', cursive;
+}
+
+#game-over-screen {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 30;
+}
+
+#game-over-text {
+  font-size: 60px;
+  font-weight: bold;
+  color: red;
+  text-transform: uppercase;
+  animation: gameOverAnim 0.5s infinite;
+}
+
+@keyframes gameOverAnim {
+  0% { transform: scale(1) rotate(0deg); opacity: 1; }
+  25% { transform: scale(1.1) rotate(-5deg); opacity: 0.8; }
+  50% { transform: scale(1.2) rotate(5deg); opacity: 1; }
+  75% { transform: scale(1.1) rotate(-5deg); opacity: 0.8; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+#win-screen {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 30;
+}
+
+#win-text {
+  font-size: 50px;
+  font-weight: bold;
+  color: lime;
+  text-transform: uppercase;
+  animation: pulse 0.5s infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.2); }
+}
+
+.again-btn {
+  font-size: 16px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 2px solid white;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  margin-top: 20px;
+  font-family: 'Bangers', cursive;
+}
+
+</style>
+</head>
+<body>
+
+<div id="rotate-message">PLEASE ROTATE YOUR DEVICE TO LANDSCAPE TO PLAY!</div>
+
+<div id="game" class="start-menu">
+
+  <!-- First instrukcii screen -->
+  <div id="instrukcii-screen">
+    <div id="back-btn"></div>
+    <div id="open-btn-2"></div>
+  </div>
+
+  <!-- Second screen -->
+  <div id="instrukcii-2">
+    <div id="back-btn-2"></div>
+  </div>
+
+  <div id="question-counter"></div>
+  <button id="start-button">START!</button>
+  <button id="new-button">INSTRUKCII</button>
+  <div id="question">Question</div>
+
+  <div id="background">
+    <div id="score">Score: 0</div>
+    <div id="answers-grid">
+      <button class="answer" id="a0"></button>
+      <button class="answer" id="a1"></button>
+      <button class="answer" id="a2"></button>
+      <button class="answer" id="a3"></button>
+    </div>
+  </div>
+
+  <div class="overlay" id="game-over-screen">
+    <div id="game-over-text">GAME OVER</div>
+    <button class="again-btn" id="again-btn1">Again?</button>
+  </div>
+
+  <div class="overlay" id="win-screen">
+    <div id="win-text">YOU WIN</div>
+    <button class="again-btn" id="again-btn2">Again?</button>
+  </div>
+
+</div>
+
+<script>
+// Questions
+const questions = [
+  {q: "KADE KUPUVA SUPERMEN?", a: ["VO SUPERMARKETOT", "KIPER", "KAJ SAKA", "NIGDE!"], correct: 0},
+  {q: "KADE ODI MACOROT KOGA E TAZEN?", a:["VO BANJA SO PENA","NA PLANINA DA VRESKA","VO FRIZIDER","NEZNAM!"], correct:2},
+  {q: "NAJOMILEN ZBOR NA YOUTUBERITE", a:["I KAKO STE DZIPERI!","BYM!","SUBSCAJBNI-MI","SHARE BRAT"], correct:2},
+  {q: "STO PRAVI MRAVKATA KOGA E ZBUNETA?", a:["SE VRTI U KRUG","LETA","SPIE","JADE SLADOLED"], correct:0},
+  {q: "KOJ VITAMIN GO IMA NAJMNOGU KAJ KRAVITE?", a:["VITAMIN:CE","VITAMIN:M*spoilers*","VITAMIN:A","VITAMIN:BE"], correct:1},
+  {q: "KOJ SPORT GO IGRA ZAJAKOT NAJDOBRO?", a:["SKOKANJE","FUDBALL","PLIVANJE","TENIS"], correct:0},
+  {q: "1 DO 1 = ?", a:["1001","1","10001","11"], correct:3},
+  {q: "Kolku bukvi vo Misisipi?", a:["8","4","6","5"], correct:1},
+  {q: "KAKO MATEMATICAR POVIKUVA KOKOSKA?", a:["3.14;3.14;3.14", "RESAVAJKI ZADACI", "NIKAKO", "SO DIGITRON"], correct:0},
+  {q: "KOJ ZBOR NAJMNOGU GO VIKA ROBOTOT?", a:["BIP-BOP", "ZDRAVO", "SUBSCRAJBNI", "JADI!"], correct:0},
+  {q: "STO PRAVI PINGVIN KOGA E ZEDEN?", a:["JADE LED", "PLIVA", "SE TRKALA PO SNEGOT", "SPIE VO VODA"], correct:0},
+  {q: "STO KE TI SE SLUCI AKO IZEDES SAAT?", a:["KE UMRES", "KE TI ZEME MNOGU VREME", "KE DOBIES GRATIS MINUTI", "NISTO POSEBNO"], correct:1},
+  {q: "NAJDOBAR SOVET ZA VODENJE BIZNIS VO MAKEDONIJA?", a:["NEMOJ!", "NE RABOTI!!", "NE RABOTI!!", "NE RABOTI!!"], correct:0},
+  {q: "AKO KUCETO NE NAPAGA TOGAS E...?", a:["GOSPOD", "GOLMAN!", "CISTAC NA ULICI", "CIWAWA"], correct:1},
+  {q: "KAKO KE ZAPOCNES FUDBALSKI NATPREVAR?", a:["SO SVIRCE", "ZUT KARTON!", "REKLAMI?", "SO ZLATKO KALINSKI"]},
+  {q: "KOJ OD OVIE E NAJDOBAR KUVAR?", a:["LIONEL MESSI", "LEBRON JAMES!", "LEONARDO DECAPRIO", "RAFAELO :)"], correct:0},
+  {q: "KAKO SE POZDRAVUVA HEMICAR?", a:["NaO3", "H3PO4", "CaO", "NERD!"], correct:2},
+  {q: "KAKO SE VIKA MEKSIKANEC STO SI JA IZGUBIL KOLATA?", a:["MANUEL", "SOMBRERO", "KARLOS", "PEDRO"], correct:2},
+  {q: "ZOSTO ZAJAKOT IMA DOLGI USI, A KRATOK OPAS?", a:["ZOSTO DA NE", "ZASTO AKO E OBRATNO KE BIL VERVERICKA", "LOGIKA BE BATKA", "ZOSTO E GLUP"], correct:1},
+  {q: "STO KE SE SLUCI KOGA KE'RZNE LAVOT TRI PATI?", a:["KE POCNE TOM I JERRY", "KE SE ZAGLAVI NA MADAGASKAR", "KE MY UMRE TATKOTO(spoilers)", "VIDI SI SAMIOT"], correct:0},
+  {q: "STO KE SE SLUCI KOGA KE'RZNE LAVOT TRI PATI?", a:["KE POCNE TOM I JERRY", "KE SE ZAGLAVI NA MADAGASKAR", "KE MY UMRE TATKOTO(spoilers)", "VIDI SI SAMIOT"], correct:0}
+];
+
+let current = 0;
+let score = 0;
+
+const questionEl = document.getElementById("question");
+const counterEl = document.getElementById("question-counter");
+const answersGrid = document.getElementById("answers-grid");
+const buttons = [
+  document.getElementById("a0"),
+  document.getElementById("a1"),
+  document.getElementById("a2"),
+  document.getElementById("a3")
+];
+const scoreEl = document.getElementById("score");
+const startButton = document.getElementById("start-button");
+const newButton = document.getElementById("new-button");
+const gameDiv = document.getElementById("game");
+const backgroundDiv = document.getElementById("background");
+const rotateMessage = document.getElementById("rotate-message");
+const gameOverScreen = document.getElementById("game-over-screen");
+const winScreen = document.getElementById("win-screen");
+const instrScreen = document.getElementById("instrukcii-screen");
+const instr2 = document.getElementById("instrukcii-2");
+const openBtn2 = document.getElementById("open-btn-2");
+const backBtn2 = document.getElementById("back-btn-2");
+const backBtn = document.getElementById("back-btn");
+
+const againBtn1 = document.getElementById("again-btn1");
+const againBtn2 = document.getElementById("again-btn2");
+
+const correctAudio = new Audio("https://eu-central.storage.cloudconvert.com/tasks/fe4eec25-60a9-4dd4-9738-3023508ed7e2/ScreenRecording_02-15-2026%203-03-13%E2%80%AFAM_1.mp3.mp3");
+function playCorrectSound() { correctAudio.currentTime = 0; correctAudio.play(); }
+
+/* Orientation fix */
+function checkOrientation() {
+  if(window.innerWidth < window.innerHeight){
+    rotateMessage.style.display = "block";
+    gameDiv.style.display = "none";
+  } else {
+    rotateMessage.style.display = "none";
+    gameDiv.style.display = "flex";
+    startButton.style.display = "block";
+    newButton.style.display = "block";
+    answersGrid.style.display = "grid";
+    buttons.forEach(btn => btn.onclick = null);
+    questionEl.style.display = "none";
+    scoreEl.style.display = "none";
+    counterEl.style.display = "none";
+    gameOverScreen.style.display = "none";
+    winScreen.style.display = "none";
+    gameDiv.classList.add("start-menu");
+  }
+}
+window.addEventListener("resize", checkOrientation);
+window.addEventListener("orientationchange", checkOrientation);
+checkOrientation();
+
+/* Button color effect */
+[startButton,newButton,...buttons,backBtn,openBtn2,backBtn2].forEach(btn=>{
+  btn.onmousedown = btn.ontouchstart = ()=>{ btn.style.color = "#00FF00"; };
+  btn.onmouseup = btn.ontouchend = ()=>{ btn.style.color = "white"; };
+});
+
+/* INSTRUKCII button */
+newButton.onclick = () => {
+  instrScreen.style.display = "flex";
+  startButton.style.display = "none";
+  newButton.style.display = "none";
+};
+
+/* Back button first screen */
+backBtn.onclick = () => {
+  instrScreen.style.display = "none";
+  startButton.style.display = "block";
+  newButton.style.display = "block";
+  gameDiv.classList.add("start-menu");
+};
+
+/* Top-right open button -> show second screen */
+openBtn2.onclick = () => {
+  instrScreen.style.display = "none";
+  instr2.style.display = "flex";
+};
+
+/* Top-left back button on second screen */
+backBtn2.onclick = () => {
+  instr2.style.display = "none";
+  instrScreen.style.display = "flex";
+};
+
+/* Start game */
+startButton.onclick = () => {
+  resetGame();
+  showQuestion();
+};
+
+/* Reset & show question functions */
+function resetGame() {
+  current = 0;
+  score = 0;
+  scoreEl.innerText = "SCORE: 0";
+  gameOverScreen.style.display = "none";
+  winScreen.style.display = "none";
+  backgroundDiv.style.display = "flex";
+  questionEl.style.display = "block";
+  answersGrid.style.display = "grid";
+  scoreEl.style.display = "block";
+  counterEl.style.display = "flex";
+  startButton.style.display = "none";
+  newButton.style.display = "none";
+  gameDiv.classList.remove("start-menu");
+}
+
+function showQuestion() {
+  if (current >= questions.length) {
+    winScreen.style.display = "flex";
+    questionEl.style.display = "none";
+    answersGrid.style.display = "none";
+    scoreEl.style.display = "none";
+    counterEl.style.display = "none";
+    return;
+  }
+
+  const q = questions[current];
+  counterEl.innerText = current + 1 + ".";
+
+  // Special question with FUDBALSKI
+  if (q.q === "KAKO KE ZAPOCNES FUDBALSKI NATPREVAR?") {
+    const indexWord = q.q.indexOf("FUDBALSKI");
+    questionEl.innerHTML =
+      q.q.slice(0, indexWord) +
+      `<span id="correctWord" style="color:black; cursor:pointer;">FUDBALSKI</span>` +
+      q.q.slice(indexWord + "FUDBALSKI".length);
+  } else {
+    questionEl.innerText = q.q;
+  }
+
+  // ENSURE QUESTION AND ANSWERS LAYOUT LIKE ALL OTHER QUESTIONS
+  questionEl.style.position = "relative";  // remove middle/absolute positioning
+  questionEl.style.top = "";
+  questionEl.style.left = "";
+  questionEl.style.transform = "";
+  questionEl.style.textAlign = "";
+
+  answersGrid.style.position = "relative";
+  answersGrid.style.top = "";
+  answersGrid.style.left = "";
+  answersGrid.style.transform = "";
+  answersGrid.style.display = "grid";
+
+  // Setup answer buttons
+  buttons.forEach((btn, i) => {
+    btn.innerText = q.a[i];
+    btn.disabled = false;
+
+    // Original color
+    const originalColor = q.a[i] === "NE RABOTI!!" ? "red" : "white";
+    btn.style.color = originalColor;
+
+    // GREEN on hold for all answers
+    btn.onmousedown = btn.ontouchstart = () => {
+      btn.style.color = "#00FF00"; // green while holding
+    };
+    btn.onmouseup = btn.ontouchend = () => {
+      btn.style.color = originalColor;
+    };
+
+    // Click logic
+    btn.onclick = () => {
+      if (i === q.correct) {
+        playCorrectSound();
+        score++;
+        current++;
+        scoreEl.innerText = "SCORE: " + score;
+        showQuestion();
+      } else {
+        gameOverScreen.style.display = "flex";
+      }
+    };
+  });
+
+  // FUDBALSKI clickable
+  if (q.q === "KAKO KE ZAPOCNES FUDBALSKI NATPREVAR?") {
+    const correctWord = document.getElementById("correctWord");
+    correctWord.onmousedown = correctWord.ontouchstart = () => {
+      correctWord.style.color = "#00FF00";
+    };
+    correctWord.onmouseup = correctWord.ontouchend = () => {
+      correctWord.style.color = "black";
+    };
+    correctWord.onclick = () => {
+      playCorrectSound();
+      score++;
+      current++;
+      scoreEl.innerText = "SCORE: " + score;
+      showQuestion();
+    };
+  }
+
+  // SHOW ELEMENTS
+  questionEl.style.display = "block";
+  answersGrid.style.display = "grid";
+  scoreEl.style.display = "block";
+  counterEl.style.display = "flex";
+}
+
+/* Again buttons */
+againBtn1.onclick = () => {
+  gameOverScreen.style.display = "none";
+  resetGame();
+  showQuestion();
+};
+
+againBtn2.onclick = () => {
+  winScreen.style.display = "none";
+  current = 0;
+  score = 0;
+  scoreEl.innerText = "SCORE: 0";
+  startButton.style.display = "block";
+  newButton.style.display = "block";
+  answersGrid.style.display = "grid";
+  backgroundDiv.style.display = "flex";
+  buttons.forEach(btn => btn.innerText = "");
+  questionEl.style.display = "none";
+  scoreEl.style.display = "none";
+  counterEl.style.display = "none";
+  gameDiv.classList.add("start-menu");
+    buttons[2].onclick = null;
+    buttons[3].onclick = null;
+    buttons[2].innerText = "";
+    buttons[3].innerText = "";
+};
+</script>
+</body>
+</html>
