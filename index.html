@@ -15,7 +15,8 @@ html, body {
   height: 100vh;
   font-family: 'Bangers', cursive;
   overflow: hidden;
-  background: white;
+  background: url('https://i.imgur.com/B18NNK5.jpeg') no-repeat center center fixed;
+  background-size: cover;
 }
 
 #rotate-message {
@@ -380,7 +381,6 @@ const questions = [
   {q: "KAKO SE POZDRAVUVA HEMICAR?", a:["NaO3", "H3PO4", "CaO", "NERD!"], correct:2},
   {q: "KAKO SE VIKA MEKSIKANEC STO SI JA IZGUBIL KOLATA?", a:["MANUEL", "SOMBRERO", "KARLOS", "PEDRO"], correct:2},
   {q: "ZOSTO ZAJAKOT IMA DOLGI USI, A KRATOK OPAS?", a:["ZOSTO DA NE", "ZASTO AKO E OBRATNO KE BIL VERVERICKA", "LOGIKA BE BATKA", "ZOSTO E GLUP"], correct:1},
-  {q: "STO KE SE SLUCI KOGA KE'RZNE LAVOT TRI PATI?", a:["KE POCNE TOM I JERRY", "KE SE ZAGLAVI NA MADAGASKAR", "KE MY UMRE TATKOTO(spoilers)", "VIDI SI SAMIOT"], correct:0},
   {q: "STO KE SE SLUCI KOGA KE'RZNE LAVOT TRI PATI?", a:["KE POCNE TOM I JERRY", "KE SE ZAGLAVI NA MADAGASKAR", "KE MY UMRE TATKOTO(spoilers)", "VIDI SI SAMIOT"], correct:0}
 ];
 
@@ -452,6 +452,8 @@ newButton.onclick = () => {
   startButton.style.display = "none";
   newButton.style.display = "none";
 };
+
+/* Back button first screen
 
 /* Back button first screen */
 backBtn.onclick = () => {
